@@ -1,0 +1,27 @@
+{
+  "name": "upvparking",
+  "version": "0.0.0",
+  "description": "parking app",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nico De Boni",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nidebo/upvparking.git"
+  },
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "bugs": {
+    "url": "https://github.com/nidebo/upvparking/issues"
+  },
+  "homepage": "https://github.com/nidebo/upvparking",
+  "dependencies": {
+    "logfmt": "~0.21.0",
+    "express": "~3.4.8"
+  }
+}
