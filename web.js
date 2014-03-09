@@ -3,7 +3,7 @@
 var express = require("express");
 var logfmt = require("logfmt");
 var app = express();
-var server = require('http').createServer(app);
+var server = require('http').createServer(app); // borrar esta linea..
 
 console.log('ENV: ' + app.get('env'));
 

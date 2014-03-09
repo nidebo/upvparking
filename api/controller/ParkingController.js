@@ -7,6 +7,8 @@ var ParkingController = function(parkingManager) {
             res.send(parkings);
         });
     };
+
+    
     
 };
 
