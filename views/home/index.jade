@@ -1,0 +1,19 @@
+extend ../layouts/main
+block content
+    div#map.jumbotron
+    div.jumbotron_hide
+    div.jumbotron_content
+        div.contenido
+            h1 Go Parking
+            p
+                | Descubre tu sitio para aparcar
+                br
+                | En construcción - 2014
+
+block script
+    script.
+        var map = new GMaps({
+            div: '#map',
+            lat: 39.481289,
+            lng: -0.3425168
+        });

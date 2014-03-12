@@ -1,0 +1,93 @@
+!!!5
+html(ng-app)
+    head
+        meta(charset="iso-8859-1")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        meta(name="description" content="")
+        meta(name="author" content="")
+        title #{title} - Go Parking
+        link(rel='stylesheet', href='/css/bootstrap.css')
+        link(rel='stylesheet', href='/css/nav-bar-top.css')
+        link(rel='stylesheet', href='/css/estilo.css')
+        link(rel='stylesheet', href='/css/bootstrap-datetimepicker.min.css')
+        link(rel='stylesheet', href='/css/jquery-ui-1.10.3.custom.min.css')
+        link(href='http://fonts.googleapis.com/css?family=Roboto:400,100', rel='stylesheet', type='text/css')
+            
+        // if lt IE 9
+            script(src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js")
+            script(src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    body
+        .navbar.navbar-default.navbar-fixed-top
+            .container
+                .navbar-header
+                    button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href="/") Go Parking
+                .navbar-collapse.collapse
+                    ul.nav.navbar-nav
+                        li 
+                            a(href="/estado-parking") Estado Parking
+
+        .hideEverything(align="center")
+            i.icon-spinner.icon-3x.icon-spin.icon-large
+
+        .col-md-12
+                //- each value, key in flash
+                //-     .alert(class="alert-#{key}") 
+                //-         .container #{value}
+        .container
+                block content
+
+        script(src="/js/jquery.js")
+        script(src="/js/bootstrap.min.js")
+        script(src="/js/angular.min.js")
+        script(src="/js/underscore-min.js")
+        script(src="/js/bootstrap-datetimepicker.min.js")
+        script(src="/js/moment-with-langs.min.js")
+        script(src="/js/jquery-ui.js")
+        script(src="http://maps.google.com/maps/api/js?sensor=true")
+        script(src="/js/gmaps.js")
+        script.
+                moment.lang('es');
+
+                var destinos = [
+                    'ETSA-ARQUITECTURA',
+                    'ETSIAMN-AGRONOMICA',
+                    'ETSIE-EDIFICACION',
+                    'ETSID-DISEÑO',
+                    'ETSIGCT-GEODESICA',
+                    'ETSINF-INFORMATICA',
+                    'ETSICCP-CAMINOS',
+                    'ETSIT-TELECOMUNICACIONES',
+                    'ETSII-INDUSTRIALES',
+                    'ADE',
+                    'BELLAS ARTES'
+                ];
+
+
+                var he = $('.hideEverything');
+
+                $(function() {
+
+                    he.html();
+                    he.fadeOut();
+
+                    $('.timePicker').datetimepicker({
+                            pickDate:false,
+                            pickSeconds: false
+                    });
+
+                    $('.datePicker').datetimepicker({
+                            pickTime:false,
+                            weekStart: 1,
+                    });
+
+                    $('.autocomplete_destino').autocomplete({
+                        source: destinos
+                    });
+                });
+
+        block script
