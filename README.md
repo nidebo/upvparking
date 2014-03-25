@@ -1,4 +1,5 @@
 upvparking
 ==========
 
-Node.js backend for a phonegap app about parkings management.
+Backend built in Node.js for a car parking management app.
+upvparking.herokuapp.com
