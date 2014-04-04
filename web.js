@@ -4,10 +4,11 @@ var express = require('express');
 var stylus = require('stylus');
 var nib = require('nib');
 var logfmt = require('logfmt');
+var mongo = require('mongodb');
 
 var app = express();
 var server = require('http').createServer(app); // borrar esta linea..
-var io = require('socket.io');
+// var io = require('socket.io');
 
 console.log('ENV: ' + app.get('env'));
 
@@ -52,24 +53,42 @@ var envDbConfig = null;
 
 // development config
 if ('development' === app.get('env')) {
-    // envDbConfig = {
-    //     port: 27017,
-    //     host: '127.0.0.1',
-    //     db: 'polimuevet'
-    // };
+    envDbConfig = {
+        port: 27017,
+        host: '127.0.0.1',
+        db: 'upvparking'
+    };
 }
 
 // production config
 if ('production' === app.get('env')) {
-    // envDbConfig = {
-    //     port: 53428,
-    //     host: "ds053428.mongolab.com",
-    //     db: 'polimuevet'
-    // };
+    envDbConfig = {
+        port: 39437,
+        host: "ds039437.mongolab.com",
+        db: 'upvparking'
+    };
 }
 
 // Conexion a BD
 // ...
+var MongoServer = mongo.Server,
+Db = mongo.Db,
+BSON = mongo.BSONPure;
+
+var mongoServer = new MongoServer(envDbConfig.host, envDbConfig.port, {auto_reconnect: true});
+db = new Db(envDbConfig.db, mongoServer, { safe: true });
+
+db.open(function(err, db) {
+    db.authenticate('admin', 'upvparking', function(err, success) {
+        // Do Something ...
+    });
+    if(!err) {
+        console.log("Connected to 'upvparking' database");
+    }
+    else {
+        console.log("Unable to connecto to 'upvparking' database");
+    }
+});
 
 // Passport
 // ...
@@ -79,8 +98,10 @@ if ('production' === app.get('env')) {
 // API
 var ParkingManager = require('./api/service/ParkingManager');
 var parkingManager = new ParkingManager();
+var ParkingDAO = require('./api/dao/ParkingDAO');
+var parkingDAO = new ParkingDAO(db);
 var ParkingController = require('./api/controller/ParkingController');
-var parkingController = new ParkingController(parkingManager);
+var parkingController = new ParkingController(parkingManager, parkingDAO);
 
 // Web Controllers
 var HomeController = require('./controllers/HomeController');
@@ -93,11 +114,16 @@ var homeController = new HomeController(); // ?
  * DELETE: Borrar
  */
 
-// API para listar Parkings
-app.get('/api/parking', parkingController.listParkings);
+// API Parkings
+app.get('/api/status', parkingController.listStatus);
+app.get('/api/parkings', parkingController.listParkings);
+app.get('/api/parking/:id', parkingController.listParking);
+app.post('/api/parking/', parkingController.createParking);
+app.delete('/api/parking/:id', parkingController.removeParking);
 
 // Web
 app.get('/estado-parking', homeController.estado_parking);
+app.get('/admin-parking', homeController.admin_parking);
 
 // Inicio Web
 app.get('/', function (req, res) {

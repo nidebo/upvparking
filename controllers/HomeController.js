@@ -10,6 +10,12 @@ var HomeController = function(){
         res.render('home/estado_parking', data);
     };
 
+    self.admin_parking = function (req, res) {
+        var data = {
+            title: 'Admin Parking'
+        };
+        res.render('parkings/admin', data);
+    };
 };
 
 module.exports = HomeController;

@@ -15,7 +15,7 @@ var ParkingManager = function() {
         { name: "Aparcamiento Mercado de Ruzafa", lat: 39.461695, lng: -0.371148 }
     ];
 
-    this.getParkings = function(callback) {
+    this.getStatus = function(callback) {
         return callback(null, _parkings);
     };
 

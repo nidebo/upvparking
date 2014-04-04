@@ -1,0 +1,45 @@
+extend ../layouts/main
+block content
+    h1.col-md-12 Administrador de Parkings
+    .container(ng-controller="ListarParkingsCtrl")
+        .parkings
+            .row
+                .col-md-12
+                    .panel.panel-default
+                        .panel-heading Listado de Parkings
+                        .panel-body
+                                .col-md-12
+                                    table.table.table-striped
+                                        tr
+                                            th Nombre
+                                            th Ubicación
+                                            th Plazas 
+                                            th
+                                        
+                                            tr(ng-repeat="p in parkings")
+                                                td {{ p.name }} 
+                                                td {{ p.location }}
+                                                td asdasd
+                                                td
+                                                    a.btn.btn-primary(href="/trayecto/{{ t.id }}") 
+                                                        | Ver
+                                                    a.btn.btn-danger(ng-click="DeleteParking(p.id)")
+                                                        | Eliminar
+block script
+    script(src="/js/ListarParkingsCtrl.js")
+    script.
+        var scope;
+        $(document).ready(function (){
+            scope = angular.element('[ng-controller="ListarParkingsCtrl"]').scope();
+            scope.getData();
+            scope.$apply();
+        }); 
+
+
+                                        
+
+
+
+
+                    
+                
