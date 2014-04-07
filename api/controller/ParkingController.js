@@ -37,12 +37,15 @@ var ParkingController = function(parkingManager, parkingDAO) {
 
     this.createParking = function (req, res) {
         var data = req.body;
+        console.log('data para crear parking: ' + JSON.stringify(data));
         _parkingDAO.addParking(data, function (err) {
             if(err) {
                 // res send error
+                res.send({ success: false });
                 return;
             }
             // res send ok
+            res.send({ success: true });
         });
     };
 

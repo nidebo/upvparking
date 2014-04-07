@@ -3,6 +3,7 @@ var ListarParkingsCtrl = function ($scope, $http) {
     $scope.parkings = [];
     $scope.submitted = false;
     $scope.todos = [];
+    $scope.parkingNuevo = {};
 
     $scope.getData = function () {
         $http.get('/api/parkings/').success(function (result) {
@@ -27,6 +28,26 @@ var ListarParkingsCtrl = function ($scope, $http) {
 
                 var index = $scope.parkings.indexOf(parking);
                 $scope.parkings.splice(index, 1);
+            });
+        }
+    }
+
+    $scope.setUbicacion = function (ubicacion) {
+        $scope.parkingNuevo.ubicacion = ubicacion;
+    }
+
+    $scope.setUbicacionLatLng = function (ubicacion) {
+        $scope.parkingNuevo.latlng = ubicacion;
+    }
+
+    $scope.AddParking = function () {
+        if($scope.form.$valid) {
+            var obj = angular.copy($scope.parkingNuevo);
+            $http.post('/api/parking', obj).success(function (response) {
+                console.log(response);
+                if(response.success === true) {
+                    window.location = "/admin-parking";
+                }
             });
         }
     }

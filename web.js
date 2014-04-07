@@ -118,12 +118,13 @@ var homeController = new HomeController(); // ?
 app.get('/api/status', parkingController.listStatus);
 app.get('/api/parkings', parkingController.listParkings);
 app.get('/api/parking/:id', parkingController.listParking);
-app.post('/api/parking/', parkingController.createParking);
+app.post('/api/parking', parkingController.createParking);
 app.delete('/api/parking/:id', parkingController.removeParking);
 
 // Web
 app.get('/estado-parking', homeController.estado_parking);
 app.get('/admin-parking', homeController.admin_parking);
+app.get('/nuevo-parking', homeController.nuevo_parking);
 
 // Inicio Web
 app.get('/', function (req, res) {

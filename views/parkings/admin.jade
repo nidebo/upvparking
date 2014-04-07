@@ -5,6 +5,7 @@ block content
         .parkings
             .row
                 .col-md-12
+                    a.btn.btn-success(href="/nuevo-parking") Nuevo Parking
                     .panel.panel-default
                         .panel-heading Listado de Parkings
                         .panel-body
@@ -17,10 +18,11 @@ block content
                                             th
                                         
                                             tr(ng-repeat="p in parkings")
-                                                td {{ p.name }} 
-                                                td {{ p.location }}
-                                                td asdasd
+                                                td {{ p.nombre }} 
+                                                td {{ p.ubicacion }}
+                                                td {{ p.plazas }}
                                                 td
+                                                    //- TODO
                                                     a.btn.btn-primary(href="/trayecto/{{ t.id }}") 
                                                         | Ver
                                                     a.btn.btn-danger(ng-click="DeleteParking(p.id)")

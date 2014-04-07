@@ -1,0 +1,118 @@
+extend ../layouts/main
+block content
+    .container(ng-controller="ListarParkingsCtrl")
+        form.form-horizontal(role="form", name="form", method="post", novalidate)
+            .row
+                .col-md-12
+                    h1 Nuevo Parking
+                    .alert.alert-danger(ng-show="form.submitted && !form.$valid")
+                        span.glyphicon.glyphicon-warning-sign 
+                        b  Error en formulario 
+                        p Favor de comprobar los campos
+
+                    .col-md-12(ng-repeat="a in alertas")
+                        .alert(ng-class="{ 'alert-danger': !a.success, 'alert-success': a.success }")
+                            {{ a.info }}
+                    .panel.panel-default
+                        .panel-heading ????
+                        .panel-body
+                                .col-md-6
+                                    .form-group(ng-class="{'has-error': form.nombre.$error.required && form.submitted }")
+                                        label.col-sm-3.control-label(for="nombre") Nombre
+                                        .col-sm-9
+                                            input.form-control(ng-model="parkingNuevo.nombre",id="nombreParking",name="nombre", type="text",placeHolder="Nombre del parking")
+                                            span(ng-show="form.nombre.$error.required  && form.submitted") El Nombre es un campo obligatorio
+
+                                    .form-group(ng-class="{'has-error': form.contacto.$error.required  && form.submitted }")
+                                        label.col-sm-3.control-label(for="contacto") Persona Contacto
+                                        .col-sm-9
+                                            input.form-control(ng-model="parkingNuevo.contacto", required, name="contacto", type="text", placeHolder="Persona de contacto")
+                                            span(ng-show="form.contacto.$error.required  && form.submitted") La persona de contacto es obligatoria.
+
+                                    .form-group(ng-class="{'has-error': form.telefono.$error.required  && form.submitted }")
+                                        label.col-sm-3.control-label(for="telefono") Teléfono
+                                        .col-sm-9
+                                            input.form-control(ng-model="parkingNuevo.telefono", required, name="telefono", type="number", placeHolder="Teléfono parking")
+                                            span(ng-show="form.telefono.$error.required  && form.submitted") El teléfono es obligatorio.
+
+                                    .form-group(ng-class="{'has-error': form.plazas.$error.required  && form.submitted }")
+                                        label.col-sm-3.control-label(for="plazas") Número plazas
+                                        .col-sm-9
+                                            input.form-control(ng-model="parkingNuevo.plazas", required, name="plazas", type="number", placeHolder="Plazas del parking")
+                                            span(ng-show="form.plazas.$error.required  && form.submitted") El número de plazas es obligatorio.
+        .row
+            .col-md-6 Ubicación: <b>{{ parkingNuevo.ubicacion }}</b>
+
+        .row
+            .col-md-12
+                div#map(style="width: 100%; height: 400px")
+
+        .row
+            .col-md-12
+                .form-group
+                    label.col-sm-2.control-label(for="observaciones") Observaciones
+                    .col-md-10
+                            textarea.form-control.col-sm-12(ng-model="parking.observaciones",name="observaciones", id="textareaObservaciones", rows="5")
+
+        .row
+            .col-md-12
+                .btn-group.col-md-4.btn-lg
+                    button.col-md-6(class="btn btn-success", id="add-parking", ng-click="AddParking()") Añadir Parking
+block script                        
+    script(src="/js/ListarParkingsCtrl.js")
+    script.
+        var scope;
+        $(document).ready(function (){
+            scope = angular.element('[ng-controller="ListarParkingsCtrl"]').scope();
+            scope.$apply();
+        });
+
+        var mapMarkers = {
+            ubicacion: false
+        };
+
+        var map = new GMaps({
+            div: '#map',
+            lat: 39.481289,
+            lng: -0.3425168,
+            click: function(e){
+              if(map.markers.length < 1){
+                var icono = ('/img/inicio.png');
+
+                  map.addMarker({
+                    lat: e.latLng.lat(),
+                    lng: e.latLng.lng(),
+                    draggable: true,
+                    icon: icono,
+                  });
+
+                if(map.markers.length == 1){
+                    // Get Location
+                    GMaps.geocode({
+                        callback: getUbicacionLocation,
+                        lat: e.latLng.lat(),
+                        lng: e.latLng.lng()
+                    });
+                }
+
+              }
+            }
+        });
+
+        function getUbicacionLocation(results, status) {
+            scope.setUbicacion('...');
+            var origin = map.markers[0].getPosition();
+            scope.setUbicacionLatLng([origin.lat(), origin.lng()]);
+            scope.$apply();
+            getLocation(results, status, scope.setUbicacion);
+        }
+
+        function getLocation(results, status, function_address) {
+            console.log(results);
+            if(results.length > 0){
+                console.log(results.length);
+                console.log(results[0].formatted_address);
+                function_address(results[0].formatted_address);
+            }
+            scope.$apply(); 
+        }

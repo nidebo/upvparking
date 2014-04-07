@@ -1,4 +1,4 @@
-var HomeController = function(){
+var HomeController = function() {
 
     var self = this;
 
@@ -16,6 +16,14 @@ var HomeController = function(){
         };
         res.render('parkings/admin', data);
     };
+
+    self.nuevo_parking = function (req, res) {
+        var data = {
+            title: 'Nuevo Parking'
+        };
+        res.render('parkings/new', data);
+    };
+
 };
 
 module.exports = HomeController;
