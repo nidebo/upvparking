@@ -24,6 +24,13 @@ var HomeController = function() {
         res.render('parkings/new', data);
     };
 
+    self.login = function (req, res) {
+        var data = {
+            title: 'Acceso Administrador'
+        };
+        res.render('home/login', data);
+    };
+
 };
 
 module.exports = HomeController;

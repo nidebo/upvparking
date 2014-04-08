@@ -3,6 +3,8 @@
 var express = require('express');
 var stylus = require('stylus');
 var nib = require('nib');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var logfmt = require('logfmt');
 var mongo = require('mongodb');
 
@@ -29,25 +31,26 @@ app.use(stylus.middleware({
     src: __dirname + '/public',
     compile: compile
 }))
-app.use(logfmt.requestLogger());
+// app.use(logfmt.requestLogger());
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.session({ secret: 'monopolio' }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(__dirname + '/public'))
 
-// NO CACHE ?????????????
-// app.use(function(req, res, next) {
-//     res.locals.flash = req.flash();
-//     res.locals.user = req.user !== undefined ? {
-//         nombre: req.user.Nombre,
-//         email: req.user.Email,
-//         IsAdmin: req.user.IsAdmin,
-//         id: req.user._id
-//     } : undefined;
-//     res.header('Cache-Control','private'); 
-//     next();
-// });
+app.use(function(req, res, next) {
+    // res.locals.flash = req.flash();
+    res.locals.user = req.user !== undefined ? {
+        username: req.user.username
+        // email: req.user.Email,
+        // IsAdmin: req.user.IsAdmin,
+        // id: req.user._id
+    } : undefined;
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    next();
+});
 
 var envDbConfig = null;
 
@@ -70,7 +73,6 @@ if ('production' === app.get('env')) {
 }
 
 // Conexion a BD
-// ...
 var MongoServer = mongo.Server,
 Db = mongo.Db,
 BSON = mongo.BSONPure;
@@ -91,7 +93,58 @@ db.open(function(err, db) {
 });
 
 // Passport
-// ...
+var ObjectID = mongo.ObjectID;
+
+var findById = function (id, fn) {
+    db.collection('administrador', function (err, collection) {
+        collection.findOne({ _id : ObjectID(id) }, function (err, user) {
+            if(err) fn(new Error('Database Problem'));
+            else if(user) fn(null, user);
+            else fn(new Error('User ' + id + ' does not exist'));
+        });
+    });
+};
+
+var findByUsername = function (uname, fn) {
+    db.collection('administrador', function (err, collection) {
+        collection.findOne({ username : uname }, function (err, user) {
+            if(err) return fn(null, null);
+            if(user) return fn(null, user);
+            return fn(null, null);
+        });
+    });
+};
+
+passport.serializeUser(function  (user, done) {
+    done(null, user._id);
+});
+
+passport.deserializeUser(function (id, done) {
+    findById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+passport.use(new LocalStrategy(
+    function (username, password, done) {
+        process.nextTick(function () {
+            findByUsername(username, function (err, user) {
+                if(err)
+                    return done(err);
+                if(!user)
+                    return done(null, false, { message: 'Usuario ' + username + ' no está en el sistema.' });
+                if(user.password != password)
+                    return done(null, false, { message: 'Usuario y/o Clave inválidos.' });
+                return done(null, user);
+            });
+        });
+    }
+));
+
+function ensureAuthenticated (req, res, next) {
+    if(req.isAuthenticated()) return next();
+    res.redirect('/login');
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -123,11 +176,28 @@ app.delete('/api/parking/:id', parkingController.removeParking);
 
 // Web
 app.get('/estado-parking', homeController.estado_parking);
-app.get('/admin-parking', homeController.admin_parking);
-app.get('/nuevo-parking', homeController.nuevo_parking);
+app.get('/login', homeController.login);
+app.get('/admin-parking', ensureAuthenticated, homeController.admin_parking);
+app.get('/nuevo-parking', ensureAuthenticated, homeController.nuevo_parking);
+app.post('/login',
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function (req, res) {
+        console.log(req.user.username + ' has logged in.');
+        res.redirect('/admin-parking');
+    }
+);
+app.get('/logout', function (req, res) {
+    if(req.user)
+        console.log(req.user.username + ' is logging out.');
+    req.logout();
+    res.redirect('/login');
+});
+
 
 // Inicio Web
 app.get('/', function (req, res) {
+    if(req.user) console.log('SIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+    else console.log('NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
 	res.render('home/index',
         {
             title: 'Home'

@@ -1,0 +1,31 @@
+extend ../layouts/main
+block content
+    .container(ng-controller="AdminCtrl")
+            .row
+                .col-md-12(ng-repeat="a in alertas")
+                    .alert(ng-class="{ 'alert-danger': !a.success, 'alert-success': a.success }")
+                        {{ a.info }}
+                    
+            .row
+                h1.col-md-12 ¡Bienvenido!
+                .col-md-6
+                    form(role="form", name="ingresar", method="post", action="/login")
+                        .panel.panel-default
+                            .panel-heading Acceso Administrador
+                            .panel-body
+                                .form-group
+                                    label(for="nPlazas") Usuario
+                                    input.form-control(ng-model="obj.loginUsername", required, id="username",name="username", type="text", placeHolder="Usuario")
+
+                                .form-group
+                                    label(for="horaSalida") Contraseña
+                                    input.form-control(ng-model="obj.LoginPassword", required, id="password", name="password",type="password", placeHolder="Contraseña")
+
+                                .form-group
+                                   label.checkbox(for="labelrecuerdame") Recuerdame 
+                                            input(ng-model="recuerdame", name="recuerdame",type="checkbox", id="recuerdame") 
+
+                                .form-group
+                                     input.col-md-6(class="btn btn btn-success", id="entrar", type="submit", value="Entrar a mi Cuenta")
+block script
+    script(src="/js/AdminCtrl.js")
