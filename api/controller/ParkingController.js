@@ -14,7 +14,7 @@ var ParkingController = function(parkingManager, parkingDAO) {
     };
 
     this.listParkings = function (req, res) {
-        console.log('ip: ' + req.connection.remoteAddress);
+        console.log('ip: ' + req.ip);
         _parkingDAO.getParkings(function (err, result) {
             if(err) {
                 // ?

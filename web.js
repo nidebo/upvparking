@@ -24,6 +24,10 @@ function compile(str, path) {
 }
 
 // Configuracion Express
+// 
+// para obtener IP del cliente
+app.enable('trust proxy');
+//
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.logger('dev'));
