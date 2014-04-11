@@ -14,6 +14,7 @@ var ParkingController = function(parkingManager, parkingDAO) {
     };
 
     this.listParkings = function (req, res) {
+        console.log('ip: ' + req.connection.remoteAddress);
         _parkingDAO.getParkings(function (err, result) {
             if(err) {
                 // ?
@@ -36,6 +37,7 @@ var ParkingController = function(parkingManager, parkingDAO) {
     };
 
     this.createParking = function (req, res) {
+        console.log('body: ' + JSON.stringify(req.body));
         var data = req.body;
         console.log('data para crear parking: ' + JSON.stringify(data));
         _parkingDAO.addParking(data, function (err) {
