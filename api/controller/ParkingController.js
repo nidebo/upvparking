@@ -1,3 +1,5 @@
+var geoip = require('geoip-lite');
+
 var ParkingController = function(parkingManager, parkingDAO) {
     
     var _parkingManager = parkingManager;
@@ -14,7 +16,10 @@ var ParkingController = function(parkingManager, parkingDAO) {
     };
 
     this.listParkings = function (req, res) {
-        console.log('ip: ' + req.ip);
+	var ip = req.ip;
+        console.log('ip: ' + ip);
+	var geo = geoip.lookup(ip);
+	console.log('geolocalizacion: ' + geo);
         _parkingDAO.getParkings(function (err, result) {
             if(err) {
                 // ?
