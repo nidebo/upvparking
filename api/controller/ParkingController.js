@@ -19,7 +19,7 @@ var ParkingController = function(parkingManager, parkingDAO) {
 	var ip = req.ip;
         console.log('ip: ' + ip);
 	var geo = geoip.lookup(ip);
-	console.log('geolocalizacion: ' + geo);
+	console.log('geolocalizacion: ' + JSON.stringify(geo));
         _parkingDAO.getParkings(function (err, result) {
             if(err) {
                 // ?
