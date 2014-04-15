@@ -7,19 +7,20 @@ var ParkingManager = function(db) {
     var parkingsCollection = "parkings";
 
     var randomizar = function () {
+        // de momento solo libre -> 1 y completo -> 0
         var mapaEstado = {
             0: 'completo',
             1: 'libre'
         };
+        // 80% libre, 20% completo
         var probabilidades = [1, 1, 1, 1, 0];
         var idx = Math.floor(Math.random() * probabilidades.length);
-        // de momento solo libre -> 1 y completo -> 0
         var estadoBool = probabilidades[idx];
         var estado = mapaEstado[estadoBool];
         return estado;
     };
 
-    var cambioEstado = new cronJob('*/1 * * * *', function () {
+    var cambioEstado = new cronJob('*/10 * * * *', function () {
         _db.collection(parkingsCollection, function (err, collection) {
             collection.find({}, {_id:1}).toArray(function (err, parkings) {
                 if(err) return;
