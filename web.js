@@ -154,7 +154,7 @@ function ensureAuthenticated (req, res, next) {
 
 // API
 var ParkingManager = require('./api/service/ParkingManager');
-var parkingManager = new ParkingManager();
+var parkingManager = new ParkingManager(db);
 var ParkingDAO = require('./api/dao/ParkingDAO');
 var parkingDAO = new ParkingDAO(db);
 var ParkingController = require('./api/controller/ParkingController');

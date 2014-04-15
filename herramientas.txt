@@ -1,0 +1,14 @@
+git / bitbucket
+angular.js
+node.js
+twitter bootstrap
+jade
+gmaps.js
+socket.io?
+cron
+mongodb
+phonegap / cordova? wtf?
+heroku
+jQuery (ui map)
+jQuery mobile
+
