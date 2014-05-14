@@ -162,7 +162,7 @@ var parkingController = new ParkingController(parkingManager, parkingDAO);
 
 // Web Controllers
 var HomeController = require('./controllers/HomeController');
-var homeController = new HomeController(); // ?
+var homeController = new HomeController(parkingDAO); // ?
 
 /**
  * GET: Leer
@@ -182,6 +182,7 @@ app.delete('/api/parking/:id', parkingController.removeParking);
 app.get('/estado-parking', homeController.estado_parking);
 app.get('/login', homeController.login);
 app.get('/admin-parking', ensureAuthenticated, homeController.admin_parking);
+app.get('/ver-parking/:id', ensureAuthenticated, homeController.ver_parking);
 app.get('/nuevo-parking', ensureAuthenticated, homeController.nuevo_parking);
 app.post('/login',
     passport.authenticate('local', { failureRedirect: '/login' }),

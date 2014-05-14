@@ -1,0 +1,91 @@
+extend ../layouts/main
+block content
+    .container(ng-controller="ListarParkingsCtrl")
+        form.form-horizontal(role="form", name="form", method="post", novalidate)
+            .row
+                .col-md-12
+                    h1 Visualizar Parking
+                    .row
+                        .col-md-6
+                            .panel.panel-default.trayecto-div
+                                .panel-heading Informacion del Parking
+                                .panel-body
+                                    .row
+                                        .col-md-6
+                                            table.table
+                                                tr
+                                                    th Nombre
+                                                    td #{ parking.nombre }
+                                                tr 
+                                                    th Contacto
+                                                    td #{ parking.contacto }
+                                        .col-md-6
+                                            table.table
+                                                tr
+                                                    th Plazas
+                                                    td #{ parking.plazas }
+                                                tr
+                                                    th Teléfono
+                                                    td #{ parking.telefono }
+                        .col-md-6
+                            .panel.panel-default.trayecto-div
+                                .panel-heading Observaciones
+                                .panel-body
+                                    .row
+                                        .col-md-6
+                                            p #{ parking.observaciones }
+            .row
+                .col-md-12
+                    .panel.panel-default
+                        .panel-heading 
+                            span.glyphicon.glyphicon-road 
+                            |  Ubicación
+                        .panel-body
+                            .row
+                                .col-md-6
+                                    table.table
+                                        tr 
+                                            th Dirección
+                                            td #{ parking.ubicacion }
+                            .row
+                                .col-md-12
+                                    div#map(style="width: 100%; height: 400px")
+block script
+    script(src="/js/ListarParkingsCtrl.js")
+    script.
+        var scope;
+        $(document).ready(function(){
+            scope = angular.element('[ng-controller="ListarParkingsCtrl"]').scope();
+            scope.$apply();
+
+            var h = $('.trayecto-div').height();
+            $('.creador-div').css('height', h);
+
+            $('.alertas').on('click', '.cerrar-aviso', function(e){
+                e.preventDefault();
+                scope.avisos = [];
+                scope.$apply();
+            });
+
+            drawParking();
+        });
+
+        var latParking = !{ parking.latlng[0] };
+        var lngParking = !{ parking.latlng[1] };
+
+        var map = new GMaps({
+            div: '#map',
+            lat: latParking,
+            lng: lngParking
+        });
+        var route = null;
+
+        function drawParking(){
+            if(scope != undefined){
+                map.addMarker({
+                    lat: latParking,
+                    lng: lngParking,
+                    icon: '/img/inicio.png'
+                });
+            }
+        }

@@ -1,8 +1,9 @@
 // var geoip = require('geoip-lite');
 
-var HomeController = function() {
+var HomeController = function(Dao) {
 
     var self = this;
+    var parkingDAO = Dao;
 
     self.estado_parking = function(req, res) {
         // var ip = req.ip;
@@ -22,6 +23,26 @@ var HomeController = function() {
             title: 'Admin Parking'
         };
         res.render('parkings/admin', data);
+    };
+
+    self.ver_parking = function (req, res) {
+        var id_parking = req.params.id;
+        var pk = null;
+        parkingDAO.getParking(id_parking, function (err, parking) {
+            if(err) {
+                console.log('error obteniendo parking para /ver-parking');
+            }
+            else {
+                pk = parking[0];
+            }
+            console.log('parking con id ' + id_parking + ': ' + JSON.stringify(pk));
+            var data = {
+                title: 'Visualizar Parking',
+                id_parking: req.params.id,
+                parking: pk
+            };
+            res.render('parkings/visualizar', data);
+        });
     };
 
     self.nuevo_parking = function (req, res) {
