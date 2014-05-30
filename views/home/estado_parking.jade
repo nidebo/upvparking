@@ -8,6 +8,8 @@ block content
         .row 
             .col-md-12
                 div#map(style="width: 100%; height: 400px")
+                script.
+                    
         .row
             table.table.table-striped
                 tr
@@ -32,8 +34,9 @@ block script
         //- socket = io.connect('/estado-parking');
         $(document).ready(function () {
             scope = angular.element('div[ng-controller="ListarParkingsCtrl"]').scope();
-            var parkings = scope.getData();
+            scope.getData();
             scope.$apply();
+            drawParkings();
         });
         //- socket.on('palCliente', function (data) {
         //-     console.log(data);
@@ -63,6 +66,20 @@ block script
               alert("Done!");
             }
         });
+
+        function drawParkings() {
+            if(scope != undefined){
+                var parkings = scope.parkings;
+                for(var i in parkings) {
+                    console.log("i: "+i);
+                    map.addMarker({
+                        lat: parkings[i].latParking,
+                        lng: parkings[i].lngParking,
+                        icon: '/img/inicio.png'
+                    });
+                }
+            }
+        };
 
 
         function createPolygon(path){
