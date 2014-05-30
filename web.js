@@ -212,6 +212,7 @@ app.get('/', function (req, res) {
 /////////// BURGUET ///////////////////////
 app.post('/burguet', function (req, res) {
     console.log(req.body);
+    res.send({ success: true });
 });
 
 var port = Number(process.env.PORT || 5000);
