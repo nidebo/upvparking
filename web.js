@@ -200,7 +200,7 @@ app.get('/logout', function (req, res) {
 
 // Descargar app
 app.get('/app', function (req, res) {
-    res.sendfile('public/apk/GoParking-new.apk');
+    res.sendfile('public/apk/GoParking-release-unsigned.apk');
 });
 
 
