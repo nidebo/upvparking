@@ -198,6 +198,11 @@ app.get('/logout', function (req, res) {
     res.redirect('/login');
 });
 
+// Descargar app
+app.get('/app', function (req, res) {
+    res.sendfile('public/apk/GoParking-new.apk');
+});
+
 
 // Inicio Web
 app.get('/', function (req, res) {
