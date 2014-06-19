@@ -7,6 +7,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var logfmt = require('logfmt');
 var mongo = require('mongodb');
+var crypto = require('crypto');
 
 var app = express();
 var server = require('http').createServer(app); // borrar esta linea..
@@ -137,7 +138,12 @@ passport.use(new LocalStrategy(
                     return done(err);
                 if(!user)
                     return done(null, false, { message: 'Usuario ' + username + ' no está en el sistema.' });
-                if(user.password != password)
+                var key = 'clavemuysegura';
+                var decipher = crypto.createDecipher('aes-256-cbc', key);
+                decipher.update(user.password, 'base64', 'utf8');
+                var decryptedPassword = decipher.final('utf8');
+                console.log('decrypted: ', decryptedPassword);
+                if(decryptedPassword != password)
                     return done(null, false, { message: 'Usuario y/o Clave inválidos.' });
                 return done(null, user);
             });
