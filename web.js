@@ -178,7 +178,7 @@ var homeController = new HomeController(parkingDAO); // ?
  */
 
 // API Parkings
-app.get('/api/status', parkingController.listStatus);
+//app.get('/api/status', parkingController.listStatus);
 app.get('/api/parkings', parkingController.listParkings);
 app.get('/api/parking/:id', parkingController.listParking);
 app.post('/api/parking', ensureAuthenticated, parkingController.createParking);
