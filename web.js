@@ -181,8 +181,8 @@ var homeController = new HomeController(parkingDAO); // ?
 app.get('/api/status', parkingController.listStatus);
 app.get('/api/parkings', parkingController.listParkings);
 app.get('/api/parking/:id', parkingController.listParking);
-app.post('/api/parking', parkingController.createParking);
-app.delete('/api/parking/:id', parkingController.removeParking);
+app.post('/api/parking', ensureAuthenticated, parkingController.createParking);
+app.delete('/api/parking/:id', ensureAuthenticated, parkingController.removeParking);
 
 // Web
 app.get('/estado-parking', homeController.estado_parking);
