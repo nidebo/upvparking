@@ -10,8 +10,7 @@ var mongo = require('mongodb');
 var crypto = require('crypto');
 
 var app = express();
-var server = require('http').createServer(app); // borrar esta linea..
-// var io = require('socket.io');
+var server = require('http').createServer(app);
 
 console.log('ENV: ' + app.get('env'));
 
@@ -25,18 +24,14 @@ function compile(str, path) {
 }
 
 // Configuracion Express
-// 
-// para obtener IP del cliente
-app.enable('trust proxy');
-//
+
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.logger('dev'));
 app.use(stylus.middleware({
     src: __dirname + '/public',
     compile: compile
-}))
-// app.use(logfmt.requestLogger());
+}));
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -46,12 +41,8 @@ app.use(passport.session());
 app.use(express.static(__dirname + '/public'))
 
 app.use(function(req, res, next) {
-    // res.locals.flash = req.flash();
     res.locals.user = req.user !== undefined ? {
         username: req.user.username
-        // email: req.user.Email,
-        // IsAdmin: req.user.IsAdmin,
-        // id: req.user._id
     } : undefined;
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     next();
@@ -156,7 +147,6 @@ function ensureAuthenticated (req, res, next) {
     res.redirect('/login');
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // API
 var ParkingManager = require('./api/service/ParkingManager');
@@ -178,7 +168,6 @@ var homeController = new HomeController(parkingDAO); // ?
  */
 
 // API Parkings
-//app.get('/api/status', parkingController.listStatus);
 app.get('/api/parkings', parkingController.listParkings);
 app.get('/api/parking/:id', parkingController.listParking);
 app.post('/api/parking', ensureAuthenticated, parkingController.createParking);
@@ -206,28 +195,19 @@ app.get('/logout', function (req, res) {
 
 // Descargar app
 app.get('/app', function (req, res) {
-    res.sendfile('public/apk/GoParking-release-unsigned.apk');
+    res.sendfile('public/apk/GoParking-new.apk');
 });
 
 
 // Inicio Web
 app.get('/', function (req, res) {
-    if(req.user) console.log('SIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
-    else console.log('NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
 	res.render('home/index',
         {
             title: 'Home'
         });
 });
 
-/////////// BURGUET ///////////////////////
-app.post('/burguet', function (req, res) {
-    console.log(req.body);
-    res.send({ success: true });
-});
-
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
 	console.log("Listening on " + port);
 });
-// server.listen(3000)
